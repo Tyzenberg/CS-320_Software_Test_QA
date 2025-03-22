@@ -3,6 +3,7 @@ package contacts;
 public class Contact {
 	
 	private String id;
+	private String firstName;
 
 	
 	private void setID(String id) {
@@ -24,6 +25,14 @@ public class Contact {
 	
 	public String getID() {
 		return id;
+	}
+	
+	public void setFirstName(String name) {
+		this.firstName = name;
+	}
+	
+	public String getFirstName() {
+		return firstName;
 	}
 
 }
