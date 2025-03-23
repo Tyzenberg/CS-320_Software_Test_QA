@@ -28,7 +28,7 @@ public class Contact {
 		return lastName;
 	}
 	
-	public String getNumber() {
+	public String getPhone() {
 		return phone;
 	}
 	

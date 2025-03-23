@@ -27,7 +27,7 @@ public class TestContacts {
 		outputs[0] = testContact.getID();
 		outputs[1] = testContact.getFirstName();
 		outputs[2] = testContact.getLastName();
-		outputs[3] = testContact.getNumber();
+		outputs[3] = testContact.getPhone();
 		outputs[4] = testContact.getAddress();
 		
 		Assertions.assertArrayEquals(inputs, outputs);
