@@ -5,14 +5,14 @@ public class Contact {
 	private String id;
 	private String firstName;
 	private String lastName;
-	private String number;
+	private String phone;
 	private String address;
 
-	public Contact(String id, String fName, String lName, String pNumber, String location) {
+	public Contact(String id, String fName, String lName, String phoneNumber, String location) {
 		setID(id);
 		setFirstName(fName);
 		setLastName(lName);
-		setNumber(pNumber);
+		setPhone(phoneNumber);
 		setAddress(location);
 	}
 	
@@ -29,7 +29,7 @@ public class Contact {
 	}
 	
 	public String getNumber() {
-		return number;
+		return phone;
 	}
 	
 	public String getAddress() {
@@ -44,6 +44,13 @@ public class Contact {
 			throw new IllegalArgumentException("Id cannot be more than 10 characters");
 		} else if(id.length() < 1 ) {
 			throw new IllegalArgumentException("Id cannot be blank");
+		}
+		
+		// verify ID is only numbers
+		for (char c : id.toCharArray()) {
+			if (c < '0' || c > '9') {
+				throw new IllegalArgumentException("Id must only contain numbers");
+			}
 		}
 		
 		this.id = id;
@@ -91,11 +98,36 @@ public class Contact {
 		this.lastName = name;
 	}
 	
-	public void setNumber(String pNumber) {
-		this.number = pNumber;
+	public void setPhone(String phoneNumber) {
+		
+		// General checks
+		if (phoneNumber == null ) {
+			throw new IllegalArgumentException("Phone Number cannot be null");
+		} else if (!(phoneNumber.length() == 10)) {
+			throw new IllegalArgumentException("Phone Number must contain 10 characters");
+		}
+		
+		// verify Phone Number is only numbers
+		for (char c : phoneNumber.toCharArray()) {
+			if (c < '0' || c > '9') {
+				throw new IllegalArgumentException("Phone Number must only contain numbers");
+			}
+		}
+		
+		this.phone = phoneNumber;
 	}
 	
 	public void setAddress(String location) {
+		
+		// General checks
+		if ( location == null ) {
+			throw new IllegalArgumentException("Address cannout be null");
+		} else if ( location.length() > 30 ) {
+			throw new IllegalArgumentException("Address cannot be more than 30 characters");
+		} else if ( location.length() < 1 ) {
+			throw new IllegalArgumentException("Address cannot be empty");
+		}
+		
 		this.address = location;
 	}
 	

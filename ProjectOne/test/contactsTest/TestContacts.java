@@ -72,6 +72,20 @@ public class TestContacts {
 		Assertions.assertThrows(IllegalArgumentException.class, () -> new Contact("", VALID_NAME, VALID_NAME, VALID_PHONE, VALID_ADDRESS));
 	}
 	
+	// Not Letters
+	@Test
+	public void testID_withLetters_ThrowsIllegalArgumentException() {
+		String testId = "23s21";
+		Assertions.assertThrows(IllegalArgumentException.class, ()-> new Contact(testId, VALID_NAME, VALID_NAME, VALID_PHONE, VALID_ADDRESS));
+	}
+	
+	// Not special characters
+	@Test
+	public void testID_withSpecialCharacters_ThrowsIllegalArgumentException() {
+		String testId = "12#45";
+		Assertions.assertThrows(IllegalArgumentException.class, ()-> new Contact(testId, VALID_NAME, VALID_NAME, VALID_PHONE, VALID_ADDRESS));
+	}
+	
 	// Not updatable TODO
 	
 	
@@ -181,32 +195,81 @@ public class TestContacts {
 	}
 	
 	//////////////////////
-	/// Test Number
+	/// Test Phone
 	//////////////////////
-	
-	// valid number
-	
+		
 	// not letters
+	@Test
+	public void testPhone_withLetters_ThrowsIllegalArgumentException() {
+		String phone = "01234s6789";
+		Assertions.assertThrows(IllegalArgumentException.class, () -> new Contact(VALID_ID, VALID_NAME, VALID_NAME, phone, VALID_ADDRESS));
+	}
 	
 	// not special characters
+	@Test
+	public void testPhone_withSpecialCharacters_ThrowsIllegalArgumentException() {
+		String phone = "01234$6789";
+		Assertions.assertThrows(IllegalArgumentException.class, () -> new Contact(VALID_ID, VALID_NAME, VALID_NAME, phone, VALID_ADDRESS));
+	}
 	
 	// not longer than 10 digits
+	@Test
+	public void testPhone_withMoreThanMaxNumbers_ThrowsIllegalArgumentException() {
+		String phone = VALID_PHONE + "1";
+		Assertions.assertThrows(IllegalArgumentException.class, () -> new Contact(VALID_ID, VALID_NAME, VALID_NAME, phone, VALID_ADDRESS));
+	}
 	
 	// not less than 10 digits
+	@Test
+	public void testPhone_withLessThanMinCharacters_ThrowsIllegalArgumentException() {
+		String phone = "123456789";
+		Assertions.assertThrows(IllegalArgumentException.class, () -> new Contact(VALID_ID, VALID_NAME, VALID_NAME, phone, VALID_ADDRESS));
+	}
 	
 	// not null
+	@Test
+	public void testPhone_withNull_ThrowsIllegalArgumentException() {
+		Assertions.assertThrows(IllegalArgumentException.class, () -> new Contact(VALID_ID, VALID_NAME, VALID_NAME, null, VALID_ADDRESS));
+	}
 	
 	//////////////////////
 	/// Test address
 	//////////////////////
 	
 	// max characters
+	@Test
+	public void testAddress_withMaxCharacters_IsSuccessful() {
+		String address = "12345678 This is 30 characters";
+		Contact testContact = new Contact(VALID_ID, VALID_NAME, VALID_NAME, VALID_PHONE, address);
+		
+		Assertions.assertEquals(address, testContact.getAddress());
+	}
 	
 	// min characters
+	@Test
+	public void testAddress_withMinCharacters_IsSuccessful() {
+		String address = "1";
+		Contact testContact = new Contact(VALID_ID, VALID_NAME, VALID_NAME, VALID_PHONE, address);
+		
+		Assertions.assertEquals(address, testContact.getAddress());
+	}
 	
 	// Not longer than 30 characters
+	@Test
+	public void testAddress_withMoreThanMaxCharacters_ThrowsIllegalArgumentException() {
+		String address = "123456789 This is 31 characters";
+		Assertions.assertThrows(IllegalArgumentException.class, () -> new Contact(VALID_ID, VALID_NAME, VALID_NAME, VALID_PHONE, address));
+	}
 	
 	// not null
+	@Test
+	public void testAddress_withNullValue_ThrowsIllegalArgumentException() {
+		Assertions.assertThrows(IllegalArgumentException.class, () -> new Contact(VALID_ID, VALID_NAME, VALID_NAME, VALID_PHONE, null));
+	}
 	
 	// not empty
+	@Test
+	public void testAddress_withEmptyString_ThrowsIllegalArgumentException() {
+		Assertions.assertThrows(IllegalArgumentException.class, () -> new Contact(VALID_ID, VALID_NAME, VALID_NAME, VALID_PHONE, ""));
+	}
 }
