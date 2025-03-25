@@ -18,8 +18,23 @@ public class TestContacts {
 	/// Test Constructors
 	//////////////////////
 	
+	// TEST CONSTRUCTOR WITH MINIMUM VALID INPUTS
+	// validate non-id fields get populated with empty strings
 	@Test
-	public void testConstructor_validInputs_IsSuccessful() {
+	public void testConstructor_minValidInputs_IsSuccessful() {
+		Contact testContact = new Contact(VALID_ID);
+				
+		// Not checking id - that is verified in other tests
+		Assertions.assertEquals("", testContact.getFirstName());
+		Assertions.assertEquals("", testContact.getLastName());
+		Assertions.assertEquals("", testContact.getPhone());
+		Assertions.assertEquals("", testContact.getAddress());
+	}
+	
+	// TEST CONSTRUCTOR WITH FULL VALID INPUTS
+	// validate constructor successfully populates all fields
+	@Test
+	public void testConstructor_fullValidInputs_IsSuccessful() {
 		String[] inputs = {VALID_ID, VALID_NAME, VALID_NAME, VALID_PHONE, VALID_ADDRESS};
 		Contact testContact = new Contact(inputs[0], inputs[1], inputs[2], inputs[3], inputs[4]);
 		
@@ -33,243 +48,296 @@ public class TestContacts {
 		Assertions.assertArrayEquals(inputs, outputs);
 	}
 	
+	// TEST CONSTRUCTOR WITH INVALID FIRSTNAME
+	// validate constructor uses firstname setter
+	@Test
+	public void testConstructor_withInvalidFirstname_ThrowsIllegalArgumentException() {
+		Assertions.assertThrows(IllegalArgumentException.class, () -> new Contact(VALID_ID, "", VALID_NAME, VALID_PHONE, VALID_ADDRESS));
+	}
+	
+	// TEST CONSTRUCTOR WITH INVALID LASTNAME
+	// validate constructor uses lastname setter
+	@Test
+	public void testConstructor_withInvalidLastname_ThrowsIllegalArgumentException() {
+		Assertions.assertThrows(IllegalArgumentException.class, () -> new Contact(VALID_ID, VALID_NAME, "", VALID_PHONE, VALID_ADDRESS));
+	}
+	
+	// TEST CONSTRUCTOR WITH INVALID PHONE
+	// validate constructor uses phone setter
+	@Test
+	public void testConstructor_withInvalidPhone_ThrowsIllegalArgumentException() {
+		Assertions.assertThrows(IllegalArgumentException.class, () -> new Contact(VALID_ID, VALID_NAME, VALID_NAME, "", VALID_ADDRESS));
+	}
+	
+	// TEST CONSTRUCTOR WITH INVALID ADDRESS
+	// validate constructor uses address setter
+	@Test
+	public void testConstructor_withInvalidAddress_ThrowsIllegalArgumentException() {
+		Assertions.assertThrows(IllegalArgumentException.class, () -> new Contact(VALID_ID, VALID_NAME, VALID_NAME, VALID_PHONE, ""));
+	}
+	
 	//////////////////////
 	/// Test ID 
 	//////////////////////
 	
-	// Not longer than 10 characters
+	// TEST ID WITH MORE THAN MAXIMUM CHARACTERS
 	@Test
 	public void testId_withMoreThanMaxCharacters_ThrowsIllegalArgumentException() {
-		Assertions.assertThrows(IllegalArgumentException.class, () -> new Contact("01234567890", VALID_NAME, VALID_NAME, VALID_PHONE, VALID_ADDRESS));
+		Assertions.assertThrows(IllegalArgumentException.class, () -> new Contact("01234567890"));
 	}
 
 	
-	// max characters
+	// TEST ID WITH MAXIUM CHARACTERS
 	@Test
 	public void testId_withMaxValid_IsSuccessful() {
 		final String MAX_ID = "0123456789";
-		
-		Contact testContact = new Contact(MAX_ID, VALID_NAME, VALID_NAME, VALID_PHONE, VALID_ADDRESS);
+		Contact testContact = new Contact(MAX_ID);
 		Assertions.assertEquals(MAX_ID, testContact.getID());
 	}
 	
-	// min characters
+	// TEST ID WITH MINIMUM CHARACTERS
 	@Test
 	public void testId_withMinValid_IsSuccessful() {
-		Contact testContact = new Contact(VALID_ID, VALID_NAME, VALID_NAME, VALID_PHONE, VALID_ADDRESS);
+		Contact testContact = new Contact(VALID_ID);
 		Assertions.assertEquals(VALID_ID, testContact.getID());
 	}
 	
-	// Not null
+	// TEST ID WITH NULL
 	@Test
 	public void testId_withNullValue_ThrowsIllegalArgumentException() {
-		Assertions.assertThrows(IllegalArgumentException.class, () -> new Contact(null, VALID_NAME, VALID_NAME, VALID_PHONE, VALID_ADDRESS));
+		Assertions.assertThrows(IllegalArgumentException.class, () -> new Contact(null));
 	}
 	
-	// Not empty
+	// TEST ID WITH EMPTY STRING
 	@Test
 	public void testId_withEmptyString_ThrowsIllegalArgumentException() {
-		Assertions.assertThrows(IllegalArgumentException.class, () -> new Contact("", VALID_NAME, VALID_NAME, VALID_PHONE, VALID_ADDRESS));
+		Assertions.assertThrows(IllegalArgumentException.class, () -> new Contact(""));
 	}
 	
-	// Not Letters
+	// TEST ID WITH LETTER
 	@Test
 	public void testID_withLetters_ThrowsIllegalArgumentException() {
 		String testId = "23s21";
-		Assertions.assertThrows(IllegalArgumentException.class, ()-> new Contact(testId, VALID_NAME, VALID_NAME, VALID_PHONE, VALID_ADDRESS));
+		Assertions.assertThrows(IllegalArgumentException.class, ()-> new Contact(testId));
 	}
 	
-	// Not special characters
+	// TEST ID WITH SPECIAL CHARACTER
 	@Test
 	public void testID_withSpecialCharacters_ThrowsIllegalArgumentException() {
 		String testId = "12#45";
-		Assertions.assertThrows(IllegalArgumentException.class, ()-> new Contact(testId, VALID_NAME, VALID_NAME, VALID_PHONE, VALID_ADDRESS));
+		Assertions.assertThrows(IllegalArgumentException.class, ()-> new Contact(testId));
 	}
 	
-	// Not updatable TODO
 	
 	
 	//////////////////////
 	/// Test firstName 
 	//////////////////////	
 	
-	// max characters
+	// TEST FIRSTNAME SETTER WITH MAXIMUM CHARACTERS
 	@Test
 	public void testFirstName_withMaxCharacters_IsSuccessful() {
-		Contact testContact = new Contact(VALID_ID, MAX_NAME, VALID_NAME, VALID_PHONE, VALID_ADDRESS);
+		Contact testContact = new Contact(VALID_ID);
+		testContact.setFirstName(MAX_NAME);
 		Assertions.assertEquals(MAX_NAME, testContact.getFirstName());
 	}
 	
-	// min characters
+	// TEST FIRSTNAME SETTER WITH MINIMUM CHARACTERS
 	@Test
 	public void testFirstName_withMinCharacters_IsSuccessful() {
-		Contact testContact = new Contact(VALID_ID, MIN_NAME, VALID_NAME, VALID_PHONE, VALID_ADDRESS);
+		Contact testContact = new Contact(VALID_ID);
+		testContact.setFirstName(MIN_NAME);
 		Assertions.assertEquals(MIN_NAME, testContact.getFirstName());
-		
 	}
 	
-	// not numbers
+	// TEST FIRSTNAME SETTER WITH A NUMBER
 	@Test
 	public void testFirstName_withNumbers_ThrowsIllegalArgumentException() {
-		
-		final String firstName = "Chr1s";		
-		Assertions.assertThrows(IllegalArgumentException.class, () -> new Contact(VALID_ID, firstName, VALID_NAME, VALID_PHONE, VALID_ADDRESS));
+		Contact testContact = new Contact(VALID_ID);
+		final String firstName = "Chr1s";
+		Assertions.assertThrows(IllegalArgumentException.class, () -> testContact.setFirstName(firstName));
 	}
 	
-	// not special characters
+	// TEST FIRSTNAME SETTER WITH A SPECIAL CHARACTER
 	@Test
 	public void testFirstName_withSpecialCharacters_ThrowsIllegalArgumentException() {
-		
-	final String firstName = "P@ul";		
-	Assertions.assertThrows(IllegalArgumentException.class, () -> new Contact(VALID_ID, firstName, VALID_NAME, VALID_PHONE, VALID_ADDRESS));
+		Contact testContact = new Contact(VALID_ID);
+		final String firstName = "P@ul";
+		Assertions.assertThrows(IllegalArgumentException.class, () -> testContact.setFirstName(firstName));
 	}
 	
-	// Not longer than 10 characters
+	// TEST FIRSTNAME SETTER WITH MORE THAN MAXIMUM CHARACTERS
 	@Test
 	public void testFirstName_withMoreThanMaxCharacters_ThrowsIllegalArgumentException() {
-		String firstName = MAX_NAME + "a";
-		Assertions.assertThrows(IllegalArgumentException.class, () -> new Contact(VALID_ID, firstName, VALID_NAME, VALID_PHONE, VALID_ADDRESS));
+		Contact testContact = new Contact(VALID_ID);
+		final String firstName = MAX_NAME + "a";
+		Assertions.assertThrows(IllegalArgumentException.class, () -> testContact.setFirstName(firstName));
 	}
 	
-	// not null
+	// TEST FIRSTNAME SETTER WITH NULL
 	@Test
 	public void testFirstName_withNullValue_ThrowsIllegalArgumentException() {
-		Assertions.assertThrows(IllegalArgumentException.class, () -> new Contact(VALID_ID, null, VALID_NAME, VALID_PHONE, VALID_ADDRESS));	
+		Contact testContact = new Contact(VALID_ID);
+		Assertions.assertThrows(IllegalArgumentException.class, () -> testContact.setFirstName(null));	
 	}
 	
-	// not empty
+	// TEST FIRSTNAME SETTER WITH EMPTY STRING
 	@Test
 	public void testFirstName_withEmptyString_ThrowsIllegalArgumentException() {
-		Assertions.assertThrows(IllegalArgumentException.class, () -> new Contact(VALID_ID, "", VALID_NAME, VALID_PHONE, VALID_ADDRESS));
+		Contact testContact = new Contact(VALID_ID);
+		Assertions.assertThrows(IllegalArgumentException.class, () -> testContact.setFirstName(""));
 	}
 	
 	//////////////////////
 	/// Test lastName
 	//////////////////////
 	
-	// max characters
+	// TEST LASTNAME SETTER WITH MAXIMUM CHARACTERS
 	@Test
 	public void testLastName_withMaxCharacters_IsSuccessful() {
-		Contact testContact = new Contact(VALID_ID, VALID_NAME, MAX_NAME, VALID_PHONE, VALID_ADDRESS);
+		Contact testContact = new Contact(VALID_ID);
+		testContact.setLastName(MAX_NAME);
 		Assertions.assertEquals(MAX_NAME, testContact.getLastName());
 	}
 	
-	// min characters
+	// TEST LASTNAME SETTER WITH MINIMUM CHARACTERS
 	@Test
 	public void testLastName_withMinCharacters_IsSuccessful() {
-		Contact testContact = new Contact(VALID_ID, VALID_NAME, MIN_NAME, VALID_PHONE, VALID_ADDRESS);
+		Contact testContact = new Contact(VALID_ID);
+		testContact.setLastName(MIN_NAME);
 		Assertions.assertEquals(MIN_NAME, testContact.getLastName());
 	}
 	
-	// not numbers
+	// TEST LASTNAME SETTER WITH A NUMBER
 	@Test
 	public void testLastName_withNumbers_ThrowsIllegalArgumentException() {
+		Contact testContact = new Contact(VALID_ID);
 		String lastName = "Chr1s";
-		Assertions.assertThrows(IllegalArgumentException.class, () -> new Contact(VALID_ID, VALID_NAME, lastName, VALID_PHONE, VALID_ADDRESS));
+		Assertions.assertThrows(IllegalArgumentException.class, () -> testContact.setLastName(lastName));
 	}
 	
-	// not special characters
+	// TEST LASTNAME SETTER WITH A SPECIAL CHARACTER
 	@Test
 	public void testLastName_withSpecialCharacters_ThrowsIllegalArgumentException() {
+		Contact testContact = new Contact(VALID_ID);
 		String lastName = "P@ul";
-		Assertions.assertThrows(IllegalArgumentException.class, () -> new Contact(VALID_ID, VALID_NAME, lastName, VALID_PHONE, VALID_ADDRESS));	
+		Assertions.assertThrows(IllegalArgumentException.class, () -> testContact.setLastName(lastName));	
 	}
 	
-	// Not longer than 10 characters
+	// TEST LASTNAME SETTER WITH MORE THAN MAXIMUM CHARACTERS
 	@Test
 	public void testLastName_withMoreThanMaxCharacters_ThrowsIllegalArgumentException() {
+		Contact testContact = new Contact(VALID_ID);
 		String lastName = MAX_NAME + "a";
-		Assertions.assertThrows(IllegalArgumentException.class, () -> new Contact(VALID_ID, VALID_NAME, lastName, VALID_PHONE, VALID_ADDRESS));
+		Assertions.assertThrows(IllegalArgumentException.class, () -> testContact.setLastName(lastName));
 	}
 	
-	// not null
+	// TEST LASTNAME SETTER WITH NULL
 	@Test
 	public void testLastName_withNullValue_ThrowsIllegalArgumentException() {
-		Assertions.assertThrows(IllegalArgumentException.class, () -> new Contact(VALID_ID, VALID_NAME, null, VALID_PHONE, VALID_ADDRESS));
+		Contact testContact = new Contact(VALID_ID);
+		Assertions.assertThrows(IllegalArgumentException.class, () -> testContact.setLastName(null));
 	}
 	
-	// not empty
+	// TEST LASTNAME SETTER WITH EMPTY STRING
 	@Test
 	public void testLastName_withEmptyString_ThrowsIllegalArgumentException() {
-		Assertions.assertThrows(IllegalArgumentException.class, () -> new Contact(VALID_ID, VALID_NAME, "", VALID_PHONE, VALID_ADDRESS));
+		Contact testContact = new Contact(VALID_ID);
+		Assertions.assertThrows(IllegalArgumentException.class, () -> testContact.setLastName(""));
 	}
 	
 	//////////////////////
 	/// Test Phone
 	//////////////////////
-		
-	// not letters
+	
+	// TEST PHONE SETTER WITH VALID INPUT
+	@Test
+	public void testPhone_withValidInput_IsSuccessful() {
+		Contact testContact = new Contact(VALID_ID);
+		testContact.setPhone(VALID_PHONE);
+		Assertions.assertEquals(VALID_PHONE, testContact.getPhone());
+	}
+	
+	// TEST PHONE SETTER WITH A LETTER
 	@Test
 	public void testPhone_withLetters_ThrowsIllegalArgumentException() {
+		Contact testContact = new Contact(VALID_ID);
 		String phone = "01234s6789";
-		Assertions.assertThrows(IllegalArgumentException.class, () -> new Contact(VALID_ID, VALID_NAME, VALID_NAME, phone, VALID_ADDRESS));
+		Assertions.assertThrows(IllegalArgumentException.class, () -> testContact.setPhone(phone));
 	}
 	
-	// not special characters
+	// TEST PHONE SETTER WITH A SPECIAL CHARACTER
 	@Test
 	public void testPhone_withSpecialCharacters_ThrowsIllegalArgumentException() {
+		Contact testContact = new Contact(VALID_ID);
 		String phone = "01234$6789";
-		Assertions.assertThrows(IllegalArgumentException.class, () -> new Contact(VALID_ID, VALID_NAME, VALID_NAME, phone, VALID_ADDRESS));
+		Assertions.assertThrows(IllegalArgumentException.class, () -> testContact.setPhone(phone));
 	}
 	
-	// not longer than 10 digits
+	// TEST PHONE SETTER WITH MORE THAN 10 CHARACTERS
 	@Test
 	public void testPhone_withMoreThanMaxNumbers_ThrowsIllegalArgumentException() {
+		Contact testContact = new Contact(VALID_ID);
 		String phone = VALID_PHONE + "1";
-		Assertions.assertThrows(IllegalArgumentException.class, () -> new Contact(VALID_ID, VALID_NAME, VALID_NAME, phone, VALID_ADDRESS));
+		Assertions.assertThrows(IllegalArgumentException.class, () -> testContact.setPhone(phone));
 	}
 	
-	// not less than 10 digits
+	// TEST PHONE SETTER WITH LESS THAN 10 CHARACTERS
 	@Test
 	public void testPhone_withLessThanMinCharacters_ThrowsIllegalArgumentException() {
+		Contact testContact = new Contact(VALID_ID);
 		String phone = "123456789";
-		Assertions.assertThrows(IllegalArgumentException.class, () -> new Contact(VALID_ID, VALID_NAME, VALID_NAME, phone, VALID_ADDRESS));
+		Assertions.assertThrows(IllegalArgumentException.class, () -> testContact.setPhone(phone));
 	}
 	
-	// not null
+	// TEST PHONE SETTER WITH NULL
 	@Test
 	public void testPhone_withNull_ThrowsIllegalArgumentException() {
-		Assertions.assertThrows(IllegalArgumentException.class, () -> new Contact(VALID_ID, VALID_NAME, VALID_NAME, null, VALID_ADDRESS));
+		Contact testContact = new Contact(VALID_ID);
+		Assertions.assertThrows(IllegalArgumentException.class, () -> testContact.setPhone(null));
 	}
 	
 	//////////////////////
 	/// Test address
 	//////////////////////
 	
-	// max characters
+	// TEST ADDRESS SETTER WITH MAXIMUM CHARACTERS
 	@Test
 	public void testAddress_withMaxCharacters_IsSuccessful() {
 		String address = "12345678 This is 30 characters";
-		Contact testContact = new Contact(VALID_ID, VALID_NAME, VALID_NAME, VALID_PHONE, address);
-		
+		Contact testContact = new Contact(VALID_ID);
+		testContact.setAddress(address);
 		Assertions.assertEquals(address, testContact.getAddress());
 	}
 	
-	// min characters
+	// TEST ADDRESS SETTER WITH 1 CHARACTER
 	@Test
 	public void testAddress_withMinCharacters_IsSuccessful() {
 		String address = "1";
-		Contact testContact = new Contact(VALID_ID, VALID_NAME, VALID_NAME, VALID_PHONE, address);
-		
+		Contact testContact = new Contact(VALID_ID);
+		testContact.setAddress(address);
 		Assertions.assertEquals(address, testContact.getAddress());
 	}
 	
-	// Not longer than 30 characters
+	// TEST ADDRESS SETTER WITH MORE THAN MAXIMUM CHARACTERS
 	@Test
 	public void testAddress_withMoreThanMaxCharacters_ThrowsIllegalArgumentException() {
+		Contact testContact = new Contact(VALID_ID);
 		String address = "123456789 This is 31 characters";
-		Assertions.assertThrows(IllegalArgumentException.class, () -> new Contact(VALID_ID, VALID_NAME, VALID_NAME, VALID_PHONE, address));
+		Assertions.assertThrows(IllegalArgumentException.class, () -> testContact.setAddress(address));
 	}
 	
-	// not null
+	// TEST ADDRESS SETTER WITH NUL
 	@Test
 	public void testAddress_withNullValue_ThrowsIllegalArgumentException() {
-		Assertions.assertThrows(IllegalArgumentException.class, () -> new Contact(VALID_ID, VALID_NAME, VALID_NAME, VALID_PHONE, null));
+		Contact testContact = new Contact(VALID_ID);
+		Assertions.assertThrows(IllegalArgumentException.class, () -> testContact.setAddress(null));
 	}
 	
-	// not empty
+	// TEST ADDRESS SETTER WITH EMPTY STRING
 	@Test
 	public void testAddress_withEmptyString_ThrowsIllegalArgumentException() {
-		Assertions.assertThrows(IllegalArgumentException.class, () -> new Contact(VALID_ID, VALID_NAME, VALID_NAME, VALID_PHONE, ""));
+		Contact testContact = new Contact(VALID_ID);
+		Assertions.assertThrows(IllegalArgumentException.class, () -> testContact.setAddress(""));
 	}
 }

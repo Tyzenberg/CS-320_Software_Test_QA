@@ -7,6 +7,22 @@ public class Contact {
 	private String lastName;
 	private String phone;
 	private String address;
+	
+	public Contact() {
+		this.id = "";
+		this.firstName = "";
+		this.lastName = "";
+		this.phone = "";
+		this.address = "";
+	}
+	
+	public Contact(String id) {
+		setID(id);
+		this.firstName = "";
+		this.lastName = "";
+		this.phone = "";
+		this.address = "";
+	}
 
 	public Contact(String id, String fName, String lName, String phoneNumber, String location) {
 		setID(id);
