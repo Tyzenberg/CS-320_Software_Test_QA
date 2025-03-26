@@ -1,6 +1,10 @@
 package contactsTest;
 
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -20,6 +24,49 @@ public class TestContactService {
 	@BeforeEach
 	public void setup() {
 		service = new ContactService();
+	}
+	
+	///////////////////////////
+	/// GET
+	///////////////////////////
+	
+	// TEST A VALID GET
+	@Test
+	public void testGet_withValidContact_IsSuccessful() {
+		// Arrange - create a service list with an existing contact
+		Contact testContact = new Contact(ID, FIRST_NAME, LAST_NAME, PHONE, ADDRESS);
+		List<Contact> contacts;
+		contacts = new ArrayList<>();
+		contacts.add(testContact);
+		service = new ContactService(contacts);
+		
+		// Act - create new contact from getContact()
+		Contact newContact = service.getContact(ID);
+		
+		// Assert - new contact will have same values as original contact
+		Assertions.assertEquals(ID, newContact.getID());
+		Assertions.assertEquals(FIRST_NAME, newContact.getFirstName());
+		Assertions.assertEquals(LAST_NAME, newContact.getLastName());
+		Assertions.assertEquals(PHONE, newContact.getPhone());
+		Assertions.assertEquals(ADDRESS, newContact.getAddress());
+	}
+	
+	// TEST GET WITH NULL
+	@Test
+	public void testGet_withNullId_ThrowIllegalArgumentException() {
+		Assertions.assertThrows(IllegalArgumentException.class, () -> service.getContact(null));
+	}
+	
+	// TEST GET WITH EMPTY ID
+	@Test
+	public void testGet_withEmptyId_ReturnsNullContact() {
+		Assertions.assertNull(service.getContact(""));
+	}
+	
+	// TEST GET WITH VALID ID BUT EMPTY SERVICE
+	@Test
+	public void testGet_withEmptyService_ReturnsNull() {
+		Assertions.assertNull(service.getContact(ID));
 	}
 	
 	///////////////////////////
@@ -71,29 +118,22 @@ public class TestContactService {
 		service.addContact(testContact);
 		
 		// Act - remove contact from service	
-		service.deleteContact(testContact);
+		service.deleteContact(testContact.getID());
 		
 		// Assert - Searching for contact in service returns null
 		Assertions.assertNull(service.getContact(ID));
 	}
 	
-	// TEST DELETING NULL CONTACT
+	// TEST DELETING NULL ID
 	@Test
-	public void testDelete_withNullContact_throwsIllegalArgumentException() {
+	public void testDelete_withNullId_throwsIllegalArgumentException() {
 		Assertions.assertThrows(IllegalArgumentException.class, () -> service.deleteContact(null));
 	}
 	
 	// TEST DELETING CONTACT THAT DOESN'T EXIST
 	@Test
 	public void testDelete_withValidContactNotInService_ThrowsIllegalArgumentException() {
-		// Arrange - create new contact
-		Contact testContact = new Contact(ID, FIRST_NAME, LAST_NAME, PHONE, ADDRESS);
-		
-		// Act - Verify contact is not found in service
-		Assertions.assertNull(service.getContact(ID));
-		
-		// Assert - Removing a contact not in service throws an IllegalArgumentException
-		Assertions.assertThrows(IllegalArgumentException.class, () -> service.deleteContact(testContact));
+		Assertions.assertThrows(IllegalArgumentException.class, () -> service.deleteContact(ID));
 	}
 
 	
@@ -107,12 +147,12 @@ public class TestContactService {
 		// Arrange - create new contact
 		// create list of field inputs
 		Contact testContact = new Contact(ID, FIRST_NAME, LAST_NAME, PHONE, ADDRESS);
-		final String[] inputs = {"Frank", "Walker", "9876543210", "4 Privet Drive"};
+		final String[] inputs = {"Harry", "Potter", "9876543210", "4 Privet Drive"};
 		
 		// Act - add contact to service
 		// edit all fields
 		service.addContact(testContact);
-		service.editContact(testContact, inputs[0], inputs[1], inputs[2], inputs[3]);
+		service.editContact(ID, inputs[0], inputs[1], inputs[2], inputs[3]);
 		
 		// Assert - all fields have been changed
 		Assertions.assertEquals(inputs[0], service.getContact(ID).getFirstName());
@@ -131,7 +171,7 @@ public class TestContactService {
 		// Act - add contact to service
 		// edit one field
 		service.addContact(testContact);
-		service.editContact(testContact, null, null, newPhone, null);
+		service.editContact(ID, null, null, newPhone, null);
 		
 		// Assert - only phone should have changed with no errors
 		Assertions.assertEquals(FIRST_NAME, service.getContact(ID).getFirstName());
@@ -150,13 +190,19 @@ public class TestContactService {
 		Assertions.assertNull(service.getContact(ID));
 		
 		// Assert - throw IllegalArgumentException when trying to edit field of contact that doesn't exist in service
-		Assertions.assertThrows(IllegalArgumentException.class, () -> service.editContact(testContact, "Bob", null, null, null));
+		Assertions.assertThrows(IllegalArgumentException.class, () -> service.editContact(ID, "Bob", null, null, null));
 	}
 	
-	// TEST EDITING A NULL CONTACT
+	// TEST EDITING A NULL ID
 	@Test
-	public void testEdit_withNullContact_throwsIllegalArgumentException() {
+	public void testEdit_withNullId_throwsIllegalArgumentException() {
 		Assertions.assertThrows(IllegalArgumentException.class, () -> service.editContact(null, "Bob", null, null, null));
+	}
+	
+	// TEST EDITING A EMPTY ID
+	@Test
+	public void testEdit_withEmptyId_throwsIllegalArgumentException() {
+		Assertions.assertThrows(IllegalArgumentException.class, () -> service.editContact("", "Bob", null, null, null));
 	}
 	
 	

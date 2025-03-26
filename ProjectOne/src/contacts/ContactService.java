@@ -11,6 +11,10 @@ public class ContactService {
 		contacts = new ArrayList<>();
 	}
 	
+	public ContactService(List<Contact> preBuilt) {
+		contacts = preBuilt;
+	}
+	
 	public void addContact(Contact newContact) {
 		
 		if (newContact == null) {
@@ -35,11 +39,15 @@ public class ContactService {
 	/*
 	 *  Get the contact by id
 	 *  Return contact if found, or return null
-	 *  @paramid - the contact id
+	 *  @param id - the contact id
 	 *  @return - the contact or null if none exists
 	 */
 	public Contact getContact(String id) {
 		Contact foundContact = null;
+		
+		if (id == null) {
+			throw new IllegalArgumentException("Cannot search for id with null value");
+		}
 		
 		for (Contact contact: contacts ) {
 			if (contact.getID().equals(id)) {
@@ -51,45 +59,59 @@ public class ContactService {
 		return foundContact;
 	}
 	
-	public void deleteContact(Contact inContact) {
+	/*
+	 *  Delete a contact by id
+	 *  Delete contact if found, throw illegal argument exception if contact doesn't exist
+	 *  @param id - the contact to be deleted
+	 */
+	public void deleteContact(String id) {
 		
-		if (inContact == null) {
+		if (id == null) {
 			throw new IllegalArgumentException("Cannot delete a null contact");
 		}
 		
-		Contact delContact = this.getContact(inContact.getID());
+		Contact delContact = this.getContact(id);
 		if (delContact == null) {
-			throw new IllegalArgumentException("Cannot delete contact that doesn't exist");	
+			throw new IllegalArgumentException("Cannot delete a contact that doesn't exist");	
 		}
 		
 		contacts.remove(delContact);
 	}
 	
-	public void editContact(Contact inContact, String firstName, String lastName, String phone, String address) {
+	/*
+	 * Edit a contact by id
+	 * Change any field of a contact
+	 * @param id - id of the contact to edit
+	 * @param firstName - updated value of the field - input null to not change
+	 * @param lastName - updated value of the field - input null to not change
+	 * @param phone - updated value of the field - input null to not change
+	 * @param address - updated value of the field - input null to not change 
+	 */
+	public void editContact(String id, String firstName, String lastName, String phone, String address) {
 		
-		if (inContact == null) {
-			throw new IllegalArgumentException("Cannot edit a null contact");
+		if (id == null) {
+			throw new IllegalArgumentException("Cannot edit a contact with a null id");
 		}
 		
-		inContact = this.getContact(inContact.getID());
-		if (inContact == null) {
+		Contact contact = this.getContact(id);
+		if (contact == null) {
 			throw new IllegalArgumentException("Cannot edit a contact that doesn't exist");
 		}
 		
 		if (firstName != null) {
-			inContact.setFirstName(firstName);
+			contact.setFirstName(firstName);
 		}
 		
 		if (lastName != null) {
-			inContact.setLastName(lastName);
+			contact.setLastName(lastName);
 		}
 		
 		if ( phone != null) {
-			inContact.setPhone(phone);
+			contact.setPhone(phone);
 		}
 		
 		if (address != null) {
-			inContact.setAddress(address);
+			contact.setAddress(address);
 		}
 		
 	}
