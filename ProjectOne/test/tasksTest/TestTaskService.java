@@ -8,35 +8,44 @@ import Tasks.TaskService;
 public class TestTaskService {
 
 	///////////////
+	/// Constructor
+	///////////////
+	
+	// TEST EMPTY CONSTRUCTOR
+	
+	// TEST CONSTRUCTOR WITH PRE-BUILT LIST
+	
+	///////////////
+	/// Get
+	///////////////
+	
+	// TEST GET WITH VALID ID
+	
+	// TEST GET WITH NON-EXISTING ID
+	
+	///////////////
 	/// Add
 	///////////////
 	
-	// TEST ADD WITH VALID ID
+	// TEST VALID ADD
 	
-	// TEST ADD WITH EMPTY ID
-	
-	// TEST ADD WITH NULL
-	
-	// TEST ADD DUPLICATE ID
-	
+	// TEST ADD WITH ALREADY EXISTING ID
 	
 	///////////////
 	/// Delete
 	///////////////
-
+	
 	// TEST A VALID DELETE
 	
-	// TEST DELETING A TASK THAT DOESN'T EXIST
-	
-	// TEST DELETING TASK WITH EMPTY ID
-	
-	// TEST DELETING TASK WITH NULL ID
-	
-	
 	///////////////
-	/// Edit
+	/// Edit Name
 	///////////////
 
-	// TEST EDITING A 
+	// TEST VALID NAME EDIT
 	
+	///////////////
+	/// Edit Description
+	///////////////
+	
+	// TEST VALID DESCRIPTION EDIT
 }
