@@ -1,6 +1,7 @@
 package appointmentTest;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import Appointment.Appointment;
 import java.util.Date;
@@ -9,9 +10,15 @@ import java.util.Date;
 public class TestAppointment {
 
 	final String VALID_ID = "37688";
-	final Date VALID_DATE = new Date(2028, 1, 16);
+	final Date VALID_DATE = new Date(2028, 7, 21);
 	final String VALID_DESCRIPTION = "Super Descriptive";
 	
+	//@BeforeEach
+	//public void setup() {
+	//	VALID_DATE.setYear(2028);
+	//	VALID_DATE.setDate(21);
+	//	VALID_DATE.setMonth(7);
+	//}
 	
 	////////////////////
 	/// Constructor
@@ -78,7 +85,7 @@ public class TestAppointment {
 	// Test Past Date
 	@Test
 	public void testDate_withDateInThePast_throwsIllegalArgumentException() {
-		Date testDate = new Date(01/01/2000);
+		Date testDate = new Date(2000, 1, 1);
 		Assertions.assertThrows(IllegalArgumentException.class, ()->new Appointment(VALID_ID, testDate, VALID_DESCRIPTION));
 	}
 	
@@ -86,8 +93,9 @@ public class TestAppointment {
 	@Test
 	public void testDate_withTodaysDate_successfullyBuilds() {
 		Date testDate = new Date();
+		testDate.setYear(testDate.getYear()+1900);
 		Appointment testApp = new Appointment(VALID_ID, testDate, VALID_DESCRIPTION);
-		Assertions.assertEquals(testDate.getDate(), testApp.getDate());
+		Assertions.assertEquals(testDate, testApp.getDate());
 	}
 	
 	////////////////////

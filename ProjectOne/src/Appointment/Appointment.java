@@ -32,6 +32,7 @@ public class Appointment {
 		}
 		
 		Date currDate = new Date();
+		currDate.setYear(currDate.getYear()+1900);
 		
 		if (date.before(currDate)) {
 			throw new IllegalArgumentException("Appointment date cannot be set before today");
