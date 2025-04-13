@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -83,7 +84,11 @@ public class TestContactService {
 		service.addContact(testContact);
 		
 		// Assert - verify contact was added
-		Assertions.assertEquals(testContact, service.getContact(testContact.getID()));
+		Assertions.assertEquals(FIRST_NAME, service.getContact(ID).getFirstName());
+		Assertions.assertEquals(LAST_NAME, service.getContact(ID).getLastName());
+		Assertions.assertEquals(PHONE, service.getContact(ID).getPhone());
+		Assertions.assertEquals(ADDRESS, service.getContact(ID).getAddress());
+		Assertions.assertNotEquals(testContact, service.getContact(ID));
 	}
 	
 	// TEST ADDING DUPLICATE
@@ -133,7 +138,7 @@ public class TestContactService {
 	// TEST DELETING CONTACT THAT DOESN'T EXIST
 	@Test
 	public void testDelete_withValidContactNotInService_ThrowsIllegalArgumentException() {
-		Assertions.assertThrows(IllegalArgumentException.class, () -> service.deleteContact(ID));
+		Assertions.assertThrows(NoSuchElementException.class, () -> service.deleteContact(ID));
 	}
 
 	
@@ -159,6 +164,7 @@ public class TestContactService {
 		Assertions.assertEquals(inputs[1], service.getContact(ID).getLastName());
 		Assertions.assertEquals(inputs[2], service.getContact(ID).getPhone());
 		Assertions.assertEquals(inputs[3], service.getContact(ID).getAddress());
+
 	}
 	// TEST EDITING ONE FIELD
 	@Test
@@ -190,7 +196,7 @@ public class TestContactService {
 		Assertions.assertNull(service.getContact(ID));
 		
 		// Assert - throw IllegalArgumentException when trying to edit field of contact that doesn't exist in service
-		Assertions.assertThrows(IllegalArgumentException.class, () -> service.editContact(ID, "Bob", null, null, null));
+		Assertions.assertThrows(NoSuchElementException.class, () -> service.editContact(ID, "Bob", null, null, null));
 	}
 	
 	// TEST EDITING A NULL ID
@@ -202,7 +208,15 @@ public class TestContactService {
 	// TEST EDITING A EMPTY ID
 	@Test
 	public void testEdit_withEmptyId_throwsIllegalArgumentException() {
-		Assertions.assertThrows(IllegalArgumentException.class, () -> service.editContact("", "Bob", null, null, null));
+		Assertions.assertThrows(NoSuchElementException.class, () -> service.editContact("", "Bob", null, null, null));
+	}
+	
+	// TEST EDITING AN EMPTY FIELD
+	@Test
+	public void testEdit_withEmptyField_throwsIllegalArgumentException() {
+		Contact testContact = new Contact(ID, FIRST_NAME, LAST_NAME, PHONE, ADDRESS);
+		service.addContact(testContact);
+		Assertions.assertThrows(IllegalArgumentException.class, () -> service.editContact(ID, "", null, null, null));
 	}
 	
 	

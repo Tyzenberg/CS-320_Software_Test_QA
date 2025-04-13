@@ -8,7 +8,7 @@ public class Contact {
 	private String phone;
 	private String address;
 	
-	public Contact() {
+	/*public Contact() {
 		this.id = "";
 		this.firstName = "";
 		this.lastName = "";
@@ -22,6 +22,10 @@ public class Contact {
 		this.lastName = "";
 		this.phone = "";
 		this.address = "";
+	}*/
+	
+	public Contact(Contact newContact) {
+		this(newContact.id, newContact.firstName, newContact.lastName, newContact.phone, newContact.address);
 	}
 
 	public Contact(String id, String fName, String lName, String phoneNumber, String location) {

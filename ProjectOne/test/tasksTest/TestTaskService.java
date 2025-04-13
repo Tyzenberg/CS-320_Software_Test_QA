@@ -38,14 +38,6 @@ public class TestTaskService {
 		Assertions.assertEquals(VALID_NAME, testTask.getName());
 		Assertions.assertEquals(VALID_DESCRIPTION, testTask.getDescription());
 	}
-
-	
-	// TEST GET WITH NON-EXISTING ID
-	@Test
-	public void testGet_withNonExistingId_throwsNoSuchElementException() {
-		TaskService testService = new TaskService(tasks);
-		Assertions.assertThrows(NoSuchElementException.class, () -> testService.getTask("NoTask"));
-	}
 	
 	// TEST GET WITH NULL ID
 	@Test
@@ -103,7 +95,7 @@ public class TestTaskService {
 	@Test
 	public void testAdd_withExistingId_throwsIllegalArgumentException() {
 		TaskService testService = new TaskService(tasks);
-		Task newTask = new Task(VALID_ID);
+		Task newTask = new Task(VALID_ID, "New Name", "New Description");
 		
 		Assertions.assertThrows(IllegalArgumentException.class, () -> testService.addTask(newTask));
 	}
@@ -128,7 +120,7 @@ public class TestTaskService {
 		
 		testService.deleteTask(VALID_ID);
 		
-		Assertions.assertThrows(NoSuchElementException.class, () -> testService.getTask(VALID_ID));
+		Assertions.assertNull(testService.getTask(VALID_ID));
 	}
 	
 	// TEST DELETING NON-EXISTANT TASK FROM POPULATED SERVICE

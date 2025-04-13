@@ -23,25 +23,9 @@ public class TaskService {
 		tasks = importList;
 	}
 	
-	// Private function to find a task based on id - no error handling
-	private Task findTask(String id) {
-		// Start with null task
-		Task foundTask = null;
-		
-		// Search for a matching Id
-		for(Task currTask: tasks) {
-			if (currTask.getId().equals(id)) {
-				// Set the null task as the found task
-				foundTask = currTask;
-				break;
-			}
-		}
-		// Return found task or null task if not found
-		return foundTask;
-	}
-	
 	// Public entrance to get a task using an id
 	public Task getTask(String id) {
+		Task foundTask = null;
 		
 		// error handling of input
 		if (id == null) {
@@ -54,14 +38,21 @@ public class TaskService {
 			throw new IllegalArgumentException("id cannot be more than 10 characters");
 		}
 		
-		// call private search function
-		Task foundTask = this.findTask(id);
-		
-		// error handling if no task found
-		if (foundTask == null) {
-			throw new NoSuchElementException("could not find a matching task");
+		boolean taskExists = false;
+		for(Task currTask: tasks) {
+			if (currTask.getId().equals(id)) {
+				// Set the null task as the found task
+				foundTask = currTask;
+				taskExists = true;
+				break;
+			}
 		}
-		return foundTask;
+
+		if (taskExists) {
+			return foundTask;
+		} else {
+			return null;
+		}
 	}
 	
 	// Add Task to list
@@ -73,12 +64,12 @@ public class TaskService {
 		}
 		
 		// error handling if list already has a task with the same id
-		if (this.findTask(newTask.getId()) != null) {
+		if (this.getTask(newTask.getId()) != null) {
 			throw new IllegalArgumentException("Cannot add a task with a duplicate Id");
 		}
 		
 		// add task to list if no error
-		tasks.add(newTask);
+		tasks.add(new Task(newTask));
 	}
 	
 	// Delete task from list
@@ -86,7 +77,9 @@ public class TaskService {
 		
 		// search for task using public function - use same error handling
 		Task tempTask = this.getTask(id);
-		 if (tempTask != null) {
+		 if (tempTask == null) {
+			 throw new NoSuchElementException("Can not delete task that doesn't exist");
+		 } else {
 			 tasks.remove(tempTask);
 		 }
 	}
@@ -104,13 +97,21 @@ public class TaskService {
 	// Public function to edit name
 	public void editName(String id, String newName) {
 		Task editTask = this.getTask(id);
-		this.editTask(EDIT_NAME, editTask, newName);
+		if (editTask == null) {
+			throw new NoSuchElementException("Cannot edit task that doesn't exist");
+		} else {
+		editTask.setName(newName);;
+		}
 	}
 	
 	// Public function to edit description
 	public void editDescription(String id, String newDesc) {
 		Task editTask = this.getTask(id);
-		this.editTask(EDIT_DESCRIPTION, editTask, newDesc);
+		if (editTask == null) {
+			throw new NoSuchElementException("Cannot edit task that doesn't exist");
+		} else {
+			editTask.setDescription(newDesc);
+		}
 	}
 
 }

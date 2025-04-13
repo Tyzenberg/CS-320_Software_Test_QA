@@ -25,25 +25,22 @@ public class TestTask {
 		Assertions.assertEquals(VALID_DESC, testTask.getDescription());
 	}
 	
-	// TEST VALID ID ONLY CONSTRUCTOR
+	// TEST CONSTRUCTOR WITH NULL TASK
 	@Test
-	public void testConstructor_withIdOnly_buildsTaskWithIdOnly() {
-		Task testTask = new Task(VALID_ID);
-		Assertions.assertEquals(VALID_ID, testTask.getId());
-		Assertions.assertEquals("", testTask.getName());
-		Assertions.assertEquals("", testTask.getDescription());
+	public void testConstructor_withNullTask_throwsNullPointerException() {
+		Assertions.assertThrows(NullPointerException.class, () -> new Task(null));
 	}
 	
-	// TEST CONSTRUCTOR WITH INVALID NAME
+	// TEST CONSTRUCTOR WITH VALID TASK
 	@Test
-	public void testConstructor_withInvalidName_throwsIllegalArgumentException() {
-		Assertions.assertThrows(IllegalArgumentException.class, () -> new Task(VALID_ID, "", VALID_DESC));
-	}
-	
-	// TEST CONSTRUCTOR WITH INVALID DESCRIPTION
-	@Test
-	public void testConstructor_withInvalidDescription_throwsIllegalArgumentException() {
-		Assertions.assertThrows(IllegalArgumentException.class, () -> new Task(VALID_ID, VALID_NAME, null));
+	public void testConstructor_withValidTask_successfullyCopiesTask() {
+		Task validTask = new Task(VALID_ID, VALID_NAME, VALID_DESC);
+		Task copiedTask = new Task(validTask);
+		
+		Assertions.assertEquals(validTask.getDescription(), copiedTask.getDescription());
+		Assertions.assertEquals(validTask.getId(), copiedTask.getId());
+		Assertions.assertEquals(validTask.getName(), copiedTask.getName());
+		Assertions.assertNotEquals(validTask, copiedTask);
 	}
 		
 	///////////////////
@@ -53,20 +50,20 @@ public class TestTask {
 	// TEST ID WITH NULL
 	@Test
 	public void testId_withNull_throwsIllegalArgumentException() {
-		Assertions.assertThrows(IllegalArgumentException.class, () -> new Task(null));
+		Assertions.assertThrows(IllegalArgumentException.class, () -> new Task(null, VALID_NAME, VALID_DESC));
 	}
 	
 	// TEST ID WITH EMPTY STRING
 	@Test
 	public void testId_withEmptyString_throwsIllegalArgumentException() {
-		Assertions.assertThrows(IllegalArgumentException.class, () -> new Task(""));
+		Assertions.assertThrows(IllegalArgumentException.class, () -> new Task("", VALID_NAME, VALID_DESC));
 	}
 	
 	// TEST ID WITH MINIMUM CHARACTERS
 	@Test
 	public void testId_withMinimumCharacters_successfullySetsId() {
 		final String minId = "1";
-		Task testTask = new Task(minId);
+		Task testTask = new Task(minId, VALID_NAME, VALID_DESC);
 		Assertions.assertEquals(minId, testTask.getId());
 	}
 	
@@ -74,7 +71,7 @@ public class TestTask {
 	@Test
 	public void testId_withMaximumCharacters_successfullySetsId() {
 		final String maxId = "1234567890";
-		Task testTask = new Task(maxId);
+		Task testTask = new Task(maxId, VALID_NAME, VALID_DESC);
 		Assertions.assertEquals(maxId, testTask.getId());
 	}
 	
@@ -82,7 +79,7 @@ public class TestTask {
 	@Test
 	public void testId_withMoreThanMaximumCharacters_throwsIllegalArgumentException() {
 		final String badId = "01234567890";
-		Assertions.assertThrows(IllegalArgumentException.class, () -> new Task(badId));
+		Assertions.assertThrows(IllegalArgumentException.class, () -> new Task(badId, VALID_NAME, VALID_DESC));
 	}
 	
 	///////////////////
@@ -92,49 +89,43 @@ public class TestTask {
 	// TEST NAME WITH NULL
 	@Test
 	public void testName_withNull_throwsIllegalArgumentException() {
-		Task testTask = new Task(VALID_ID);
-		Assertions.assertThrows(IllegalArgumentException.class, () -> testTask.setName(null));
+		Assertions.assertThrows(IllegalArgumentException.class, () -> new Task(VALID_ID, null, VALID_DESC));
 	}
 	
 	// TEST NAME WITH EMPTY STRING
 	@Test
 	public void testName_withEmptyString_throwsIllegalArgumentException() {
-		Task testTask = new Task(VALID_ID);
-		Assertions.assertThrows(IllegalArgumentException.class, () -> testTask.setName(""));
+		Assertions.assertThrows(IllegalArgumentException.class, () -> new Task(VALID_ID, "", VALID_DESC));
 	}
 	
 	// TEST NAME WITH MINIMUM CHARACTERS
 	@Test
 	public void testName_withMinimumCharacters_successfullySetsName() {
-		Task testTask = new Task(VALID_ID);
 		final String minName = "A";
-		testTask.setName(minName);
+		Task testTask = new Task(VALID_ID, minName, VALID_DESC);
 		Assertions.assertEquals(minName, testTask.getName());
 	}
 	
 	// TEST NAME WITH MAXIMUM CHARACTERS
 	@Test
 	public void testName_withMaximumCharacters_successfullySetsName() {
-		Task testTask = new Task(VALID_ID);
 		final String maxName = "12345678901234567890";
-		testTask.setName(maxName);
+		Task testTask = new Task(VALID_ID, maxName, VALID_DESC);
 		Assertions.assertEquals(maxName, testTask.getName());
 	}
 	
 	// TEST NAME WITH MORE THAN MAXIMUM CHARACTERS
 	@Test
 	public void testName_withMoreThanMaximumCharacters_throwsIllegalArgumentException() {
-		Task testTask = new Task(VALID_ID);
 		final String badName = "012345678901234567890";
-		Assertions.assertThrows(IllegalArgumentException.class, () -> testTask.setName(badName));
+		Assertions.assertThrows(IllegalArgumentException.class, () -> new Task(VALID_ID, badName, VALID_DESC));
 	}
 	
 	// TEST NAME WITH NON-LETTERS
 	@Test
 	public void testName_withNonLetters_successfullySetsName() {
 		final String testString = "L33t (0d3";
-		Task testTask = new Task(VALID_ID);
-		testTask.setName(testString);
+		Task testTask = new Task(VALID_ID, testString, VALID_DESC);
 		Assertions.assertEquals(testString, testTask.getName());
 	}
 		
@@ -145,49 +136,43 @@ public class TestTask {
 	// TEST DESCRITION WITH NULL
 	@Test
 	public void testDescription_withNull_throwsIllegalArgumentException() {
-		Task testTask = new Task(VALID_ID);
-		Assertions.assertThrows(IllegalArgumentException.class, () -> testTask.setDescription(null));
+		Assertions.assertThrows(IllegalArgumentException.class, () -> new Task(VALID_ID, VALID_NAME, null));
 	}
 	
 	// TEST DESCRIPTION WITH EMPTY STRING
 	@Test
 	public void testDescription_withEmptyString_throwsIllegalArgumentException() {
-		Task testTask = new Task(VALID_ID);
-		Assertions.assertThrows(IllegalArgumentException.class, () -> testTask.setDescription(""));		
+		Assertions.assertThrows(IllegalArgumentException.class, () -> new Task(VALID_ID, VALID_NAME, ""));		
 	}
 	
 	// TEST DESCRIPTION WITH MINIMUM CHARACTERS
 	@Test
 	public void testDescription_withMinimumCharacters_successfullySetsDescription() {
-		Task testTask = new Task(VALID_ID);
 		final String minString = "A";
-		testTask.setDescription(minString);
+		Task testTask = new Task(VALID_ID, VALID_NAME, minString);
 		Assertions.assertEquals(minString, testTask.getDescription());
 	}
 	
 	// TEST DESCRIPTION WITH MAXIMUM CHARACTERS
 	@Test
 	public void testDescription_withMaximumCharacters_successfullySetsDescription() {
-		Task testTask = new Task(VALID_ID);
 		final String maxString = "01234567891124567892123456789312345678941234567895";
-		testTask.setDescription(maxString);
+		Task testTask = new Task(VALID_ID, VALID_NAME, maxString);
 		Assertions.assertEquals(maxString, testTask.getDescription());
 	}
 	
 	// TEST DESCRIPTION WITH MORE THAN MAXIMUM CHARACTERS
 	@Test
 	public void testDescription_withMoreThanMaxCharacters_successfullySetsDescription() {
-		Task testTask = new Task(VALID_ID);
 		final String badString = "012345678911245678921234567893123456789412345678951";
-		Assertions.assertThrows(IllegalArgumentException.class, () -> testTask.setDescription(badString));
+		Assertions.assertThrows(IllegalArgumentException.class, () -> new Task(VALID_ID, VALID_NAME, badString));
 	}
 	
 	// TEST DESCRIPTION WITH NON-LETTERS
 	@Test
 	public void testDescription_withNonLetters_successfullySetsDescription() {
-		Task testTask = new Task(VALID_ID);
 		final String testString = "Th1$ !5 N0t SQL Inj3(tion @GetALLPasswords";
-		testTask.setDescription(testString);
+		Task testTask = new Task(VALID_ID, VALID_NAME, testString);
 		Assertions.assertEquals(testString, testTask.getDescription());
 	}
 	

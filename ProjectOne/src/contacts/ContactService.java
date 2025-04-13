@@ -2,6 +2,7 @@ package contacts;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class ContactService {
 	
@@ -21,19 +22,11 @@ public class ContactService {
 			throw new IllegalArgumentException("Cannot add a null contact");
 		}
 		
-		boolean isDuplicate = false;
-		for (Contact contact : contacts) {
-			if (contact.getID().equals(newContact.getID())) {
-				isDuplicate = true;
-				break;
-			}
-		}
-		
-		if (isDuplicate) {
+		if (this.getContact(newContact.getID()) != null) {
 			throw new IllegalArgumentException("Cannot add contact with same id: " + newContact.getID());
+		} else {
+			contacts.add(new Contact(newContact));
 		}
-		
-		contacts.add(newContact);
 	}
 	
 	/*
@@ -49,14 +42,20 @@ public class ContactService {
 			throw new IllegalArgumentException("Cannot search for id with null value");
 		}
 		
+		boolean contactExists = false;
 		for (Contact contact: contacts ) {
 			if (contact.getID().equals(id)) {
 				foundContact = contact;
+				contactExists = true;
 				break;
 			}
 		}
 		
-		return foundContact;
+		if (contactExists) {
+			return foundContact;
+		} else {
+			return null;
+		}
 	}
 	
 	/*
@@ -72,7 +71,7 @@ public class ContactService {
 		
 		Contact delContact = this.getContact(id);
 		if (delContact == null) {
-			throw new IllegalArgumentException("Cannot delete a contact that doesn't exist");	
+			throw new NoSuchElementException("Cannot delete a contact that doesn't exist");	
 		}
 		
 		contacts.remove(delContact);
@@ -95,7 +94,7 @@ public class ContactService {
 		
 		Contact contact = this.getContact(id);
 		if (contact == null) {
-			throw new IllegalArgumentException("Cannot edit a contact that doesn't exist");
+			throw new NoSuchElementException("Cannot edit a contact that doesn't exist");
 		}
 		
 		if (firstName != null) {
@@ -106,14 +105,14 @@ public class ContactService {
 			contact.setLastName(lastName);
 		}
 		
-		if ( phone != null) {
+		if (phone != null) {
 			contact.setPhone(phone);
 		}
 		
 		if (address != null) {
 			contact.setAddress(address);
 		}
-		
+
 	}
 
 }

@@ -6,16 +6,8 @@ public class Task {
 	String name;
 	String description;
 	
-	public Task() {
-		this.id = "";
-		this.name = "";
-		this.description = "";
-	}
-	
-	public Task(String id) {
-		this.setId(id);
-		this.name = "";
-		this.description = "";
+	public Task(Task copyTask) {
+		this(copyTask.id, copyTask.name, copyTask.description);
 	}
 	
 	public Task(String id, String name, String description) {

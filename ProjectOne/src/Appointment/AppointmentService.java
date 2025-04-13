@@ -18,29 +18,35 @@ public class AppointmentService {
 		appointments = importList;
 	}
 	
-	public Appointment get(String id) {
+	public Appointment getAppointment(String id) {
 		Appointment foundApp = null;
 		
+		boolean appExists = false;
 		for (Appointment currApp: appointments) {
 				if (currApp.getId().equals(id)) {
 					foundApp = currApp;
+					appExists = true;
 					break;
 				}
 		}
 		
-		return foundApp;
+		if (appExists) {
+			return foundApp;
+		} else {
+			return null;
+		}
 	}
 	
-	public void add(Appointment newApp) {
+	public void addAppointment(Appointment newApp) {
 		if (newApp == null) {
 			throw new IllegalArgumentException("Cannot add a null appointment");
 		}
 		
-		if (this.get(newApp.getId()) != null) {
+		if (this.getAppointment(newApp.getId()) != null) {
 			throw new IllegalArgumentException("Cannot add an appointment with a duplicate id");
 		}
-		
-		appointments.add(newApp);	
+			
+		appointments.add(new Appointment(newApp));
 	}
 	
 	public void delete(String id) {
@@ -51,7 +57,7 @@ public class AppointmentService {
 			throw new IllegalArgumentException("Cannot delete an empty id");
 		}
 		
-		Appointment tempApp = this.get(id);
+		Appointment tempApp = this.getAppointment(id);
 		if (tempApp == null) {
 			throw new NoSuchElementException("Could not find an appointment with that id");
 		}

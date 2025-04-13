@@ -14,6 +14,10 @@ public class Appointment {
 		this.setDescription(description);
 	}
 	
+	public Appointment(Appointment newAppointment) {
+		this(newAppointment.id, newAppointment.date, newAppointment.description);
+	}
+	
 	private void setId(String id) {
 		if (id == null) {
 			throw new IllegalArgumentException("Appointment id cannot be null");

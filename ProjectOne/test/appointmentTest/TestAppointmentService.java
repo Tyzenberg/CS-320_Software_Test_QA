@@ -15,14 +15,9 @@ public class TestAppointmentService {
 	
 	// Static Variables
 	final String VALID_ID = "749115";
-	final Date VALID_DATE = new Date(2057, 10, 19);
+	final Date VALID_DATE = new Date();
 	final String VALID_DESCRIPTION = "Better be retired";
 	
-	// Testing objects
-	Appointment validApp = new Appointment(VALID_ID, VALID_DATE, VALID_DESCRIPTION);
-	List<Appointment> testList = new ArrayList<>();
-	
-		
 	////////////////////////
 	/// Add
 	////////////////////////
@@ -31,13 +26,19 @@ public class TestAppointmentService {
 	@Test
 	public void testAdd_intoEmptyService_successfullyAdds() {
 		// Arrange - build empty service
+		VALID_DATE.setYear(VALID_DATE.getYear()+1901);
+		Appointment validApp = new Appointment(VALID_ID, VALID_DATE, VALID_DESCRIPTION);
+		List<Appointment> testList = new ArrayList<>();
 		AppointmentService testService = new AppointmentService();
 		
 		// Act - add appointment to service
-		testService.add(validApp);
+		testService.addAppointment(validApp);
 		
-		// Assert - we return validApp when using the get method and validApp's id
-		Assertions.assertEquals(validApp, testService.get(VALID_ID));
+		// Assert - the returned appointment from getAppointment is not validApp, but contains same information
+		Assertions.assertEquals(validApp.getDescription(), testService.getAppointment(VALID_ID).getDescription());
+		Assertions.assertEquals(validApp.getId(), testService.getAppointment(VALID_ID).getId());
+		Assertions.assertEquals(validApp.getDate(), testService.getAppointment(VALID_ID).getDate());
+		Assertions.assertNotEquals(validApp, testService.getAppointment(VALID_ID));
 	}
 	
 	// Add null appointment
@@ -48,13 +49,16 @@ public class TestAppointmentService {
 		Appointment newApp = null;
 		
 		// Act & Assert - adding null appointment throws IllegalArgumentException
-		Assertions.assertThrows(IllegalArgumentException.class, ()->testService.add(newApp));
+		Assertions.assertThrows(IllegalArgumentException.class, ()->testService.addAppointment(newApp));
 	}
 	
 	// Valid add in populated AppointmentService
 	@Test
 	public void testAdd_uniqueIdIntoPopulatedService_successfullyAdds() {
 		// Arrange - build populate service
+		VALID_DATE.setYear(VALID_DATE.getYear()+1901);
+		Appointment validApp = new Appointment(VALID_ID, VALID_DATE, VALID_DESCRIPTION);
+		List<Appointment> testList = new ArrayList<>();
 		testList.add(validApp);
 		AppointmentService testService = new AppointmentService(testList);
 		
@@ -63,16 +67,22 @@ public class TestAppointmentService {
 		final Date newDate = new Date(2033, 2, 8);
 		final String newDesc = "Meet Karen for lunch";
 		Appointment newApp = new Appointment(newId, newDate, newDesc);
-		testService.add(newApp);
+		testService.addAppointment(newApp);
 		
-		// Assert - newApp is return when using newApp's id in get method
-		Assertions.assertEquals(newApp, testService.get(newId));
+		// Assert - Same details are added, but not same appointment
+		Assertions.assertEquals(newApp.getDescription(), testService.getAppointment(newId).getDescription());
+		Assertions.assertEquals(newApp.getId(), testService.getAppointment(newId).getId());
+		Assertions.assertEquals(newApp.getDate(), testService.getAppointment(newId).getDate());
+		Assertions.assertNotEquals(newApp, testService.getAppointment(newId));
 	}
 	
 	// Add appointment with duplicate ID
 	@Test
 	public void testAdd_withDuplicatedId_throwsIllegalArgumentException() {
 		// Arrange - build populated service
+		VALID_DATE.setYear(VALID_DATE.getYear()+1901);
+		Appointment validApp = new Appointment(VALID_ID, VALID_DATE, VALID_DESCRIPTION);
+		List<Appointment> testList = new ArrayList<>();
 		testList.add(validApp);
 		AppointmentService testService = new AppointmentService(testList);
 		
@@ -82,13 +92,16 @@ public class TestAppointmentService {
 		Appointment newApp = new Appointment(VALID_ID, newDate, newDesc);
 		
 		// Assertion - Adding newApp throws IllegalArgumentException
-		Assertions.assertThrows(IllegalArgumentException.class, ()-> testService.add(newApp));
+		Assertions.assertThrows(IllegalArgumentException.class, ()-> testService.addAppointment(newApp));
 	}
 	
 	// Add appointment with duplicate Date
 	@Test
 	public void testAdd_withDuplicatedDate_successfullyAdds() {
 		// Arrange - build populated service
+		VALID_DATE.setYear(VALID_DATE.getYear()+1901);
+		Appointment validApp = new Appointment(VALID_ID, VALID_DATE, VALID_DESCRIPTION);
+		List<Appointment> testList = new ArrayList<>();
 		testList.add(validApp);
 		AppointmentService testService = new AppointmentService(testList);
 		
@@ -96,16 +109,19 @@ public class TestAppointmentService {
 		final String newId = "109942";
 		final String newDesc = "Meet Karen for lunch";
 		Appointment newApp = new Appointment(newId, VALID_DATE, newDesc);
-		testService.add(newApp);
+		testService.addAppointment(newApp);
 		
 		// Assert - newApp is return when using newApp's id in get method
-		Assertions.assertEquals(newApp, testService.get(newId));
+		Assertions.assertEquals(newApp.getDescription(), testService.getAppointment(newId).getDescription());
 	}
 	
 	// Add appointment with duplicate Description
 	@Test
 	public void testAdd_withDuplicatedDescription_successfullyAdds() {
 		// Arrange - build populated service
+		VALID_DATE.setYear(VALID_DATE.getYear()+1901);
+		Appointment validApp = new Appointment(VALID_ID, VALID_DATE, VALID_DESCRIPTION);
+		List<Appointment> testList = new ArrayList<>();
 		testList.add(validApp);
 		AppointmentService testService = new AppointmentService(testList);
 		
@@ -113,12 +129,11 @@ public class TestAppointmentService {
 		final String newId = "109942";
 		final Date newDate = new Date(2033, 2, 8);
 		Appointment newApp = new Appointment(newId, newDate, VALID_DESCRIPTION);
-		testService.add(newApp);
+		testService.addAppointment(newApp);
 		
 		// Assert - newApp is return when using newApp's id in get method
-		Assertions.assertEquals(newApp, testService.get(newId));
+		Assertions.assertEquals(newApp.getDescription(), testService.getAppointment(newId).getDescription());
 	}
-	
 	
 	////////////////////////
 	/// Delete
@@ -128,6 +143,9 @@ public class TestAppointmentService {
 	@Test
 	public void testDelete_withExistingAppointment_successfullyDeletes() {
 		// Arrange - build populated service
+		VALID_DATE.setYear(VALID_DATE.getYear()+1901);
+		Appointment validApp = new Appointment(VALID_ID, VALID_DATE, VALID_DESCRIPTION);
+		List<Appointment> testList = new ArrayList<>();
 		testList.add(validApp);
 		AppointmentService testService = new AppointmentService(testList);
 		
@@ -135,13 +153,16 @@ public class TestAppointmentService {
 		testService.delete(VALID_ID);
 		
 		// Assertions - null is returned when searching for VALID_ID
-		Assertions.assertNull(testService.get(VALID_ID));
+		Assertions.assertNull(testService.getAppointment(VALID_ID));
 	}
 	
 	// Delete appointment that doesn't exist
 	@Test
 	public void testDelete_withNonExistingAppointment_throwsNoSuchElementException() {
 		// Arrange - build populated service
+		VALID_DATE.setYear(VALID_DATE.getYear()+1901);
+		Appointment validApp = new Appointment(VALID_ID, VALID_DATE, VALID_DESCRIPTION);
+		List<Appointment> testList = new ArrayList<>();
 		testList.add(validApp);
 		AppointmentService testService = new AppointmentService(testList);
 		
@@ -163,6 +184,9 @@ public class TestAppointmentService {
 	@Test
 	public void testDelete_withNullId_throwsIllegalArgumentException() {
 		// Arrange - build populated service
+		VALID_DATE.setYear(VALID_DATE.getYear()+1901);
+		Appointment validApp = new Appointment(VALID_ID, VALID_DATE, VALID_DESCRIPTION);
+		List<Appointment> testList = new ArrayList<>();
 		testList.add(validApp);
 		AppointmentService testService = new AppointmentService(testList);
 		
@@ -173,6 +197,9 @@ public class TestAppointmentService {
 	@Test
 	public void testDelete_withEmptyId_throwsIllegalArgumentException() {
 		// Arrange - build populated service
+		VALID_DATE.setYear(VALID_DATE.getYear()+1901);
+		Appointment validApp = new Appointment(VALID_ID, VALID_DATE, VALID_DESCRIPTION);
+		List<Appointment> testList = new ArrayList<>();
 		testList.add(validApp);
 		AppointmentService testService = new AppointmentService(testList);
 		
@@ -189,6 +216,9 @@ public class TestAppointmentService {
 	public void testFunctionality_deleteThenAddSameId_successfullyAdds() {
 		// Arrange
 		// build populated service
+		VALID_DATE.setYear(VALID_DATE.getYear()+1901);
+		Appointment validApp = new Appointment(VALID_ID, VALID_DATE, VALID_DESCRIPTION);
+		List<Appointment> testList = new ArrayList<>();
 		testList.add(validApp);
 		AppointmentService testService = new AppointmentService(testList);
 		// build new appointment with same id
@@ -199,25 +229,34 @@ public class TestAppointmentService {
 		
 		// Act - delete old appointment from service, then add new appointment with same id
 		testService.delete(VALID_ID);
-		testService.add(newApp);
+		testService.addAppointment(newApp);
 		
 		// Assert - using id on get method returns newApp
-		Assertions.assertEquals(newApp, testService.get(VALID_ID));
+		Assertions.assertEquals(newApp.getDescription(), testService.getAppointment(VALID_ID).getDescription());
+		Assertions.assertEquals(newApp.getId(), testService.getAppointment(VALID_ID).getId());
+		Assertions.assertEquals(newApp.getDate(), testService.getAppointment(VALID_ID).getDate());
+		Assertions.assertNotEquals(newApp, testService.getAppointment(VALID_ID));
 	}
 	
 	// Delete appointment then add same appointment
 	@Test
 	public void testFunctionality_deleteThanAddSameAppointment_successfullyAdds() {
 		// Arrange - build populated service
+		VALID_DATE.setYear(VALID_DATE.getYear()+1901);
+		Appointment validApp = new Appointment(VALID_ID, VALID_DATE, VALID_DESCRIPTION);
+		List<Appointment> testList = new ArrayList<>();
 		testList.add(validApp);
 		AppointmentService testService = new AppointmentService(testList);
 		
 		// Act - delete appointment, then add same appointment
 		testService.delete(VALID_ID);
-		testService.add(validApp);
+		testService.addAppointment(validApp);
 		
 		// Assert - using id on get method returns validApp
-		Assertions.assertEquals(validApp, testService.get(VALID_ID));
+		Assertions.assertEquals(validApp.getDescription(), testService.getAppointment(VALID_ID).getDescription());
+		Assertions.assertEquals(validApp.getId(), testService.getAppointment(VALID_ID).getId());
+		Assertions.assertEquals(validApp.getDate(), testService.getAppointment(VALID_ID).getDate());
+		Assertions.assertNotEquals(validApp, testService.getAppointment(VALID_ID));
 	}
 	
 	
